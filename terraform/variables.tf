@@ -1,21 +1,17 @@
-variable "aws_region" {
+variable "region" {
     type = string
-    description = ""
+    description = "Region where terraform will place resources"
 }
 
-variable "aws_key" {
+variable "access_key" {
     type = string
+    description = "Access key for cloud"
     sensitive = true
-    description = "AWS Key"
 }
 
 variable "secret_key" {
     type = string
+    description = "Secret key for cloud"
     sensitive = true
-    description = "AWS Secret key" 
 }
 
-variable "instance_type" {
-    type = string
-    description = "Instance type for server" 
-}

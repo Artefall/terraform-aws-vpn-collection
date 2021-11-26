@@ -34,11 +34,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Render terraform docs and push changes back to PR
         uses: terraform-docs/gh-actions@main
         with:
           working-dir: ${{ matrix.modules-paths }}
           output-file: README.md
           output-method: inject
-          git-push: "true"
+          git-push: "false"

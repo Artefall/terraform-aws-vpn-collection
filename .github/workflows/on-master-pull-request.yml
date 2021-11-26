@@ -10,9 +10,6 @@ jobs:
   TerraformValidation:
     name: Validate terraform modules
     runs-on: ubuntu-latest
-    strategy:
-      matrix: 
-        modules-paths: ["pptp_vpn", "wireguard_vpn"]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -28,10 +25,17 @@ jobs:
       - name: Validate terraform modules
         run: terragrunt run-all validate
 
+  DocumentationGeneration:
+    name: "Generation of documentation for every module"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        modules-paths: ["pptp_vpn", "wireguard_vpn"]
+    steps:
       - name: Render terraform docs and push changes back to PR
         uses: terraform-docs/gh-actions@main
         with:
           working-dir: ${{ matrix.modules-paths }}
           output-file: README.md
           output-method: inject
-          git-push: "false"
+          git-push: "true"

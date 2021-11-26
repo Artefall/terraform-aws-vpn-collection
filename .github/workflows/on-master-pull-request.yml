@@ -32,13 +32,15 @@ jobs:
       matrix: 
         modules-paths: ["pptp_vpn", "wireguard_vpn"]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Render terraform docs and push changes back to PR
-        uses: terraform-docs/gh-actions@main
-        with:
-          working-dir: ${{ matrix.modules-paths }}
-          output-file: README.md
-          output-method: inject
-          git-push: "false"
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        
+    - name: Render terraform docs inside the USAGE.md and push changes back to PR branch
+      uses: terraform-docs/gh-actions@v0.11.0
+      with:
+        working-dir: ${{ matrix.modules-paths }}
+        output-file: USAGE.md
+        output-method: inject
+        git-push: "true"

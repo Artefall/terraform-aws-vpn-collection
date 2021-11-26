@@ -32,6 +32,9 @@ jobs:
       matrix: 
         modules-paths: ["pptp_vpn", "wireguard_vpn"]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
       - name: Render terraform docs and push changes back to PR
         uses: terraform-docs/gh-actions@main
         with:

@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  CreateDocumentationAndBlueprint:
+    name: Create documentation and blueprints
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        modules-paths: ["pptp_vpn", "wireguard_vpn"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Render terraform docs and push changes back to PR
+        uses: terraform-docs/gh-actions@main
+        with:
+          working-dir: ${{ matrix.modules-paths }}
+          output-file: README.md
+          output-method: inject
+          git-push: "true"

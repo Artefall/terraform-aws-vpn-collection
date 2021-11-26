@@ -7,16 +7,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  TerraformValidation:
     name: Validate terraform modules
-    strategy: 
-      matrix: 
-        module: ["terraform", "pptp_vpn"]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - uses: hashicorp/setup-terraform@v1
+      - name: Setup Terragrunt
+        uses: autero1/action-terragrunt@v1.1.0
+        with:
+          terragrunt_version: "latest"
 
-      - name: Check terraform module
-        run: terraform validate {{ maxtrix.module }}
+      - name: Check terraform formating
+        run: terragrunt run-all fmt -check
+
+      - name: Validate terraform modules
+        run: terragrunt run-all validate

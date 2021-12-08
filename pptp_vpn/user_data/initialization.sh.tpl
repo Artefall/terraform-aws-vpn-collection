@@ -3,6 +3,9 @@
 sudo apt update
 sudo apt install pptpd
 
+echo -e "${pptp_config}" >> /etc/pptpd.conf
+echo -e "${chap_secrets}" >> /etc/ppp/chap-secrets
+echo -e "${pptpd_options}" >> /etc/ppp/chap-secrets
 
 sudo service pptpd restart
 

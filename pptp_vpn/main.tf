@@ -1,9 +1,3 @@
-provider "aws" {
-  region     = var.region
-  access_key = var.access_key
-  secret_key = var.secret_key
-}
-
 data "aws_ami" "ubuntu_server_image_latest" {
   owners      = ["099720109477"]
   most_recent = true
@@ -14,20 +8,36 @@ data "aws_ami" "ubuntu_server_image_latest" {
   }
 }
 
-resource "aws_instance" "vpn_machine" {
+resource "tls_private_key" "this" {
+  algorithm = "RSA"
+  rsa_bits = 4096
+}
+
+resource "aws_key_pair" "this"{
+  key_name = "ssh-key"
+  public_key = tls_private_key.this.public_key_openssh
+}
+
+resource "aws_instance" "this" {
   count = 1
 
   instance_type = var.instance_type
   ami           = data.aws_ami.ubuntu_server_image_latest.id
 
+  user_data = templatefile("${path.module}/user_data/initialization.sh.tpl", {
+    pptp_config = local.pptp_config_content,
+    chap_secrets = local.chap_secrets_content,
+    pptpd_options = local.pptpd_options_content
+  })
+
   security_groups = [aws_security_group.this.name]
   tags = {
-    Name = var.virtual_machine_host_name
+    Name = "PPTP VPN Host"
   }
 }
 
 resource "aws_eip" "this" {
-  instance = aws_instance.vpn_machine[0].id
+  instance = aws_instance.this[0].id
   vpc      = false
 }
 

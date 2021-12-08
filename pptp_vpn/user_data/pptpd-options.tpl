@@ -1,2 +1,2 @@
-ms-dns {primary_dns}
-ms-dns {secondary_dns}
+ms-dns ${primary_dns}
+ms-dns ${secondary_dns}

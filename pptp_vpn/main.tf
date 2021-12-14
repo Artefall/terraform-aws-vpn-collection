@@ -4,7 +4,7 @@ data "aws_ami" "ubuntu_server_image_latest" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-*-21*-amd64-server-*"]
   }
 }
 
@@ -14,7 +14,7 @@ resource "tls_private_key" "this" {
 }
 
 resource "aws_key_pair" "this"{
-  key_name = "ssh-key"
+  key_name = "executing-death-grips"
   public_key = tls_private_key.this.public_key_openssh
 }
 
@@ -31,6 +31,9 @@ resource "aws_instance" "this" {
   })
 
   security_groups = [aws_security_group.this.name]
+
+  key_name = "ssh-key"
+
   tags = {
     Name = "PPTP VPN Host"
   }
@@ -42,15 +45,23 @@ resource "aws_eip" "this" {
 }
 
 resource "aws_security_group" "this" {
-  name        = "Allow VPN connections"
-  description = "Allow VPN connections for this host"
+  name        = "Allow connections"
+  description = "Allow connections for this host"
 
-  ingress {
-    description = "Open VPN port"
-    from_port   = 1723
-    to_port     = 1723
-    protocol    = "tcp"
+  dynamic "ingress" {
+    for_each = ["1723", "22"]
+    content{
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
+
+  egress = {
+    
+  }
+
 
   tags = {
     Name = "Allow VPN connection"

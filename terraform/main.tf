@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 module "pptp_vpn" {
   source = "../pptp_vpn"
 

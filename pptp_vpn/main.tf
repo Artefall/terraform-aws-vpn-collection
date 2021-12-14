@@ -32,8 +32,6 @@ resource "aws_instance" "this" {
 
   security_groups = [aws_security_group.this.name]
 
-  key_name = "ssh-key"
-
   tags = {
     Name = "PPTP VPN Host"
   }
@@ -48,9 +46,10 @@ resource "aws_security_group" "this" {
   name        = "Allow connections"
   description = "Allow connections for this host"
 
+
   dynamic "ingress" {
     for_each = ["1723", "22"]
-    content{
+    content {
       from_port   = ingress.value
       to_port     = ingress.value
       protocol    = "tcp"
@@ -58,10 +57,12 @@ resource "aws_security_group" "this" {
     }
   }
 
-  egress = {
-    
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
-
 
   tags = {
     Name = "Allow VPN connection"

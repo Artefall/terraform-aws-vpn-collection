@@ -47,7 +47,7 @@ variable "allowed_ip_address" {
 
 variable "local_ip" {
   type        = string
-  description = "Local PPTPD ip"
+  description = "Local PPTP VPN IP address"
   default = "192.168.84.1"
 }
 
@@ -62,13 +62,13 @@ variable "remote_ip_range" {
 variable "primary_dns" {
   type        = string
   description = "PPTPD primary DNS"
-  default = "192.168.84.1"
+  default = "8.8.8.8"
 }
 
 variable "secondary_dns" {
   type        = string
   description = "PPTPD secondary dns"
-  default = "192.168.84.100-200"
+  default = "8.8.4.4"
 }
 
 locals{
